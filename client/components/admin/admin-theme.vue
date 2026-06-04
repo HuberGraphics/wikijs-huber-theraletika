@@ -241,7 +241,17 @@ export default {
     config: {
       query: themeConfigQuery,
       fetchPolicy: 'network-only',
-      update: (data) => data.theming.config,
+      update (data) {
+        this.themes = _.map(_.get(data, 'theming.themes', []), thm => ({
+          text: thm.title,
+          author: thm.author,
+          value: thm.key,
+          isInstalled: true,
+          installDate: '',
+          updatedAt: ''
+        }))
+        return data.theming.config
+      },
       watchLoading (isLoading) {
         this.$store.commit(`loading${isLoading ? 'Start' : 'Stop'}`, 'admin-theme-refresh')
       }
